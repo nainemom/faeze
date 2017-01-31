@@ -190,6 +190,9 @@ function Faeze(){
 			if( isTrue ){
 				start();
 			}
+			else{
+				window.location = "https://github.com/nainemom/faeze";
+			}
 		});
 	}
 	self.ended = function(map, start){
@@ -197,12 +200,15 @@ function Faeze(){
 			self.go( map.levelPosition(5) );
 			self.$el.classList.add('ended');
 			self.ask(map, 	{
-				body: 'آفرین بر شما. اگه دوست داشتید این صفحه رو به اشتراک بذارین. آیا میخواهید ادامه دهید؟',
+				body: 'آفرین. شما پل‌ها را با موفقیت پشت سر گذاشتید. اما متأسفانه پدر دوست فائزه که انصافا اصلا از او انتظار نداشتیم، در نهایت به فائزه تجاوز کرد. اگه دوست داشتید این صفحه رو به اشتراک بذارین. آیا میخواهید ادامه دهید؟',
 				choices: ['بله', 'خیر'],
 				rightAnswer: 1
 			}, function(answer, randomAnswer, isTrue){
 				if( isTrue ){
 					start();
+				}
+				else{
+					window.location = "https://github.com/nainemom/faeze";
 				}
 			});
 		}, 750 );
