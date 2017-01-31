@@ -164,11 +164,14 @@ function Faeze(){
 			$choice.onclick = function(){
 				var answer = parseInt( this.getAttribute('choice') );
 				$el.remove();
-				if( answer == question.rightAnswer ){
-					callback(answer, true);
+				
+				var rightAnswer = parseInt( Math.random() * question.choices.length ) + 1;
+				
+				if( answer == rightAnswer ){
+					callback(answer, true, answer == question.rightAnswer);
 				}
 				else{
-					callback(answer, false);
+					callback(answer, false, answer == question.rightAnswer);
 				}
 				
 			}
@@ -177,13 +180,13 @@ function Faeze(){
 		
 
 	}
-	self.fcked = function(map, start){
+	self.fcked = function(map, start, fromMahram){
 		self.$el.classList.add('fcked');
 		self.ask(map, 	{
-			body: 'متاسفانه فائزه  مورد تجاوز واقع شد. آیا میخواهید ادامه دهید؟',
+			body: fromMahram? 'متاسفانه فائزه توسط کسی که محرم بود و ازش انتظار نداشتیم مورد تجاوز واقع شد. آیا میخواهید ادامه دهید؟': 'متاسفانه فائزه  مورد تجاوز واقع شد. آیا میخواهید ادامه دهید؟',
 			choices: ['بله', 'خیر'],
 			rightAnswer: 1
-		}, function(answer, isTrue){
+		}, function(answer, randomAnswer, isTrue){
 			if( isTrue ){
 				start();
 			}
@@ -197,7 +200,7 @@ function Faeze(){
 				body: 'آفرین بر شما. اگه دوست داشتید این صفحه رو به اشتراک بذارین. آیا میخواهید ادامه دهید؟',
 				choices: ['بله', 'خیر'],
 				rightAnswer: 1
-			}, function(answer, isTrue){
+			}, function(answer, randomAnswer, isTrue){
 				if( isTrue ){
 					start();
 				}
@@ -233,7 +236,7 @@ var questions = [
 		rightAnswer: 2
 	},
 	{
-		body: 'خب خدا رو شکر. از رو عمو رد شدم و بهم تجاوز نکرد. الان از رو کی رد شم؟',
+		body: 'خب خدا رو شکر. تا الان که کسی بهم تجاوز نکرد. الان از رو کی رد شم؟',
 		choices: ['پسر خواهر', 'داماد عمو', 'پسرعموی مادر', 'شوهر خاله'],
 		rightAnswer: 1
 	},
@@ -254,39 +257,39 @@ var questions = [
 
 function start(){
 	faeze.reset(map);
-	faeze.ask(map, questions[0], function(answer, isTrue){
+	faeze.ask(map, questions[0], function(answer, isTrue, fromMahram){
 		faeze.go( map.levelPosition(1, answer) );
 		if( isTrue ){
-			faeze.ask(map, questions[1], function(answer, isTrue){
+			faeze.ask(map, questions[1], function(answer, isTrue, fromMahram){
 				faeze.go( map.levelPosition(2, answer) );
 				if( isTrue ){
-					faeze.ask(map, questions[2], function(answer, isTrue){
+					faeze.ask(map, questions[2], function(answer, isTrue, fromMahram){
 						faeze.go( map.levelPosition(3, answer) );
 						if( isTrue ){
-							faeze.ask(map, questions[3], function(answer, isTrue){
+							faeze.ask(map, questions[3], function(answer, isTrue, fromMahram){
 								faeze.go( map.levelPosition(4, answer) );
 								if( isTrue ){
 									faeze.ended(map, start);
 								}
 								else{
-									faeze.fcked(map, start);
+									faeze.fcked(map, start, fromMahram);
 								}
 							});
 						}
 						else{
-							faeze.fcked(map, start);
+							faeze.fcked(map, start, fromMahram);
 						}
 					});
 			
 				}
 				else{
-					faeze.fcked(map, start);
+					faeze.fcked(map, start, fromMahram);
 				}
 			});
 
 		}
 		else{
-			faeze.fcked(map, start);
+			faeze.fcked(map, start, fromMahram);
 		}
 	});
 }
