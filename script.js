@@ -189,10 +189,19 @@ function Faeze(){
 			}
 		});
 	}
-	self.ended = function(){
+	self.ended = function(map, start){
 		setTimeout(function(){
 			self.go( map.levelPosition(5) );
 			self.$el.classList.add('ended');
+			self.ask(map, 	{
+				body: 'آفرین بر شما. اگه دوست داشتید این صفحه رو به اشتراک بذارین. آیا میخواهید ادامه دهید؟',
+				choices: ['بله', 'خیر'],
+				rightAnswer: 1
+			}, function(answer, isTrue){
+				if( isTrue ){
+					start();
+				}
+			});
 		}, 750 );
 	}
 	self.reset = function(map){
@@ -257,7 +266,7 @@ function start(){
 							faeze.ask(map, questions[3], function(answer, isTrue){
 								faeze.go( map.levelPosition(4, answer) );
 								if( isTrue ){
-									faeze.ended();
+									faeze.ended(map, start);
 								}
 								else{
 									faeze.fcked(map, start);
