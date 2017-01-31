@@ -7,7 +7,11 @@ html, body{
 	font-family: Vazir, Tahoma;
 	font-size: .9em;
 }
-
+.desc{
+	width: 450px;
+	color: #FFF;
+	margin: 10px auto;
+}
 .map{
 	margin: 50px auto;
 	position: relative;
