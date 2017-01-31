@@ -1,0 +1,68 @@
+html, body{
+	direction: rtl;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	background: #2C3E50;
+	font-family: Vazir, Tahoma;
+	font-size: .9em;
+}
+
+.map{
+	margin: 50px auto;
+	position: relative;
+	background-image: url("map.png");
+	width: 450px;
+	height: 575px;
+	box-shadow: 0 0 25px rgba(0,0,0,0.75);
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+
+.faeze{
+	position: absolute;
+	background-image: url("faeze.png");
+	width: 55px;
+	height: 88px;
+	transition: all .3s;
+	animation-name: faeze_dance;
+	animation-iteration-count: infinite;
+	animation-duration: .3s;
+}
+.faeze.fcked{
+    transform: rotateZ(280deg) translateX(-50%);
+    animation: none;
+}
+
+.faeze.ended{
+	transition: all 1s;
+    left: 10px;
+    top: 178px;
+	opacity: 0;
+}
+
+.question{
+    margin: 8px;
+    font-weight: bold;
+}
+
+.choice{
+	width: 100px;
+	margin: 4px auto;
+	background: #639E11;
+	border-radius: 8px;
+	padding: 1px 3px;
+	box-shadow: 0 2px 0 rgba(0,0,0,0.6);
+	cursor: pointer;
+	color: #FFF;	
+}
+.choice:hover{
+	background: #84C52A;
+}
+
+
+@keyframes faeze_dance {
+    0%   {transform: translateY(-1%)}
+    50%  {transform: translateY(-2%)}
+}
