@@ -240,45 +240,94 @@ var questions = [
 	}
 ]
 
+function jumpSound() {
+	console.log("jumping");
+  soundEffect(
+    523.25,       //frequency
+    0.05,         //attack
+    0.2,          //decay
+    "sine",       //waveform
+    3,            //volume
+    0.8,          //pan
+    0,            //wait before playing
+    600,          //pitch bend amount
+    true,         //reverse
+    100,          //random pitch range
+    0,            //dissonance
+    undefined,    //echo: [delay, feedback, filter]
+    undefined     //reverb: [duration, decay, reverse?]
+  );
+}
 
+function bonusSound() {
+  //D
+  soundEffect(587.33, 0, 0.2, "square", .06, 0, 0);
+  //A
+  soundEffect(880, 0, 0.2, "square", .06, 0, 0.1);
+  //High D
+  soundEffect(1174.66, 0, 0.3, "square", .05, 0, 0.2);
+}
 
+function endSound() {
+  //D
+  soundEffect(880.995, 0, 0.2, "square", .07, 0, 0);
+  //A
+  soundEffect(1320, 0, 0.2, "square", .07, 0, 0.1);
+  //High D
+  soundEffect(1761.99, 0, 0.3, "square", .09, 0, 0.2);
+}
 
 function start(){
 	faeze.reset(map);
 	faeze.ask(map, questions[0], function(answer, isTrue){
 		faeze.go( map.levelPosition(1, answer) );
-		if( isTrue ){
-			faeze.ask(map, questions[1], function(answer, isTrue){
-				faeze.go( map.levelPosition(2, answer) );
-				if( isTrue ){
-					faeze.ask(map, questions[2], function(answer, isTrue){
-						faeze.go( map.levelPosition(3, answer) );
+		jumpSound();
+		setTimeout(function() {
+			if( isTrue ){
+				bonusSound();
+				faeze.ask(map, questions[1], function(answer, isTrue){
+					faeze.go( map.levelPosition(2, answer) );
+					jumpSound();
+					setTimeout(function() {
 						if( isTrue ){
-							faeze.ask(map, questions[3], function(answer, isTrue){
-								faeze.go( map.levelPosition(4, answer) );
-								if( isTrue ){
-									faeze.ended();
-								}
-								else{
-									faeze.fcked(map, start);
-								}
+							bonusSound();
+							faeze.ask(map, questions[2], function(answer, isTrue){
+								faeze.go( map.levelPosition(3, answer) );
+								jumpSound();
+								setTimeout(function() {
+									if( isTrue ){
+										bonusSound();
+										faeze.ask(map, questions[3], function(answer, isTrue){
+											faeze.go( map.levelPosition(4, answer) );
+											jumpSound();
+											setTimeout(function() {
+												if( isTrue ){
+													endSound();
+													faeze.ended();
+												}
+												else{
+													faeze.fcked(map, start);
+												}
+											}, 500);
+										});
+									}
+									else{
+										faeze.fcked(map, start);
+									}
+								}, 500);
 							});
 						}
 						else{
 							faeze.fcked(map, start);
 						}
-					});
-			
-				}
-				else{
-					faeze.fcked(map, start);
-				}
-			});
-
-		}
-		else{
-			faeze.fcked(map, start);
-		}
+					}, 500);
+				});
+				
+			}
+			else{
+				faeze.fcked(map, start);
+			}
+		}, 500);
 	});
 }
 start();
