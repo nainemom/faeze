@@ -142,9 +142,10 @@ function Map(){
 }
 
 
-function Faeze(){
+function Faeze(sound){
 	var self = this;
 	self.go = function(position){
+		sound.play('jump');
 		self.$el.style.left = (position.x - 27) +'px';
 		self.$el.style.top = (position.y - 70)+'px';
 	}
@@ -169,6 +170,9 @@ function Faeze(){
 				
 				if( answer == rightAnswer ){
 					callback(answer, true, answer == question.rightAnswer);
+					setTimeout( function(){
+						sound.play('bonus');
+					}, 500);
 				}
 				else{
 					callback(answer, false, answer == question.rightAnswer);
@@ -181,6 +185,9 @@ function Faeze(){
 
 	}
 	self.fcked = function(map, start, fromMahram){
+		setTimeout( function(){
+			sound.play('fcked');
+		}, 500);
 		self.$el.classList.add('fcked');
 		self.ask(map, 	{
 			body: fromMahram? 'متاسفانه فائزه توسط کسی که محرم بود و ازش انتظار نداشتیم مورد تجاوز واقع شد. آیا میخواهید ادامه دهید؟': 'متاسفانه فائزه  مورد تجاوز واقع شد. آیا میخواهید ادامه دهید؟',
@@ -196,6 +203,9 @@ function Faeze(){
 		});
 	}
 	self.ended = function(map, start){
+		setTimeout( function(){
+			sound.play('ended');
+		}, 500);
 		setTimeout(function(){
 			self.go( map.levelPosition(5) );
 			self.$el.classList.add('ended');
@@ -225,11 +235,45 @@ function Faeze(){
 	self.$el.classList.add('faeze');
 }
 
+function Sound(){
+	var self = this;
+	self.play = function(soundName){
+		switch(soundName){
+			case 'jump':
+				soundEffect(523.25, 0.05, 0.2, 'sine', 3, 0.8, 0, 600, true, 100, 0);
+				break;
+			case 'fcked':
+			  soundEffect(150, 0, 0.3, "square", .05, 0, 0);  
+			  soundEffect(50, 0, 0.7, "square", .06, 0, 0.2);
+				break;
+			case 'ended':
+				soundEffect(180, 0, 0.2, "square", 0.07, 0, 0);
+				soundEffect(880, 0, 0.2, "square", 0.07, 0, 0);
+				soundEffect(880, 0, 0.2, "square", 0.07, 0, 0.2);
+				soundEffect(880, 0, 0.2, "square", 0.07, 0, 0.6);
+				soundEffect(550.33, 0, 0.2, "square", 0.06, 0, 1);
+				soundEffect(350.33, 0, 0.2, "square", 0.06, 0, 1);
+				soundEffect(880, 0, 0.2, "square", 0.07, 0, 1.2);
+				soundEffect(1180, 0, 0.2, "square", 0.07, 0, 1.6);
+				soundEffect(680, 0, 0.2, "square", 0.07, 0, 1.6);
+				soundEffect(550.33, 0, 0.2, "square", 0.06, 0, 2.4);
+				soundEffect(350.33, 0, 0.2, "square", 0.06, 0, 2.4);
+				break;
+			case 'bonus':
+				soundEffect(587.33, 0, 0.2, 'square', 0.06, 0, 0);
+				soundEffect(880, 0, 0.2, 'square', 0.06, 0, 0.1);
+				soundEffect(1174.66, 0, 0.3, 'square', 0.05, 0, 0.2);
+				break;
+		}
+	}
+}
 
 var map = new Map();
 document.body.appendChild( map.$el );
 
-var faeze = new Faeze();
+var sound = new Sound();
+
+var faeze = new Faeze(sound);
 map.$el.appendChild( faeze.$el );
 
 
