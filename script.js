@@ -145,7 +145,7 @@ function Map(){
 function Faeze(sound){
 	var self = this;
 	self.go = function(position, playSound){
-		if( typeof playSound != 'undefined' && playSound == true ) {
+		if( typeof playSound == 'undefined' || playSound !== false ) {
 			sound.play('jump');
 		}
 		self.$el.style.left = (position.x - 27) +'px';
