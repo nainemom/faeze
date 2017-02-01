@@ -104,8 +104,8 @@ function Map(){
 				switch( choice ){
 					case 1:
 						return {
-							x: 619,
-							y: 213,
+							x: 170,
+							y: 206,
 							failed: true
 						}
 					case 2:
@@ -142,7 +142,7 @@ function Map(){
 }
 
 
-function Faeze(sound){
+function Faeze(sound, map){
 	var self = this;
 	self.go = function(position, playSound){
 		if( typeof playSound == 'undefined' || playSound !== false ) {
@@ -151,8 +151,19 @@ function Faeze(sound){
 		self.$el.style.left = (position.x - 27) +'px';
 		self.$el.style.top = (position.y - 70)+'px';
 	}
+	self._score = 2000;
+	self.score = function(val){
+		if( val === 0 ){
+			self._score = 2000;
+		}
+		else{
+			self._score+=val;
+		}
+		self.$score.innerHTML = self._score<0? ('منفی '+(self._score*-1)): self._score;
+	}
+
 	self.level = 0;
-	self.ask = function(map, question, callback){
+	self.ask = function(question, soundPlay, callback){
 		var $el = document.createElement('div');
 		$el.classList.add('question');
 		$el.innerHTML = question.body;
@@ -170,14 +181,16 @@ function Faeze(sound){
 				
 				var rightAnswer = parseInt( Math.random() * question.choices.length ) + 1;
 				
-				if( answer == rightAnswer ){
-					callback(answer, true, answer == question.rightAnswer);
+				callback(answer, answer == rightAnswer);
+				if( soundPlay == true && answer == rightAnswer ){
 					setTimeout( function(){
 						sound.play('bonus');
 					}, 500);
 				}
-				else{
-					callback(answer, false, answer == question.rightAnswer);
+				else if( soundPlay == true ){
+					setTimeout( function(){
+						sound.play('fcked');
+					}, 500);
 				}
 				
 			}
@@ -186,55 +199,24 @@ function Faeze(sound){
 		
 
 	}
-	self.fcked = function(map, start, fromMahram){
-		setTimeout( function(){
-			sound.play('fcked');
-		}, 500);
+	self.fcked = function(start, fromMahram){
 		self.$el.classList.add('fcked');
-		self.ask(map, 	{
-			body: fromMahram? 'متاسفانه فائزه توسط کسی که محرم بود و ازش انتظار نداشتیم مورد تجاوز واقع شد. آیا میخواهید ادامه دهید؟': 'متاسفانه فائزه  مورد تجاوز واقع شد. آیا میخواهید ادامه دهید؟',
-			choices: ['بله', 'خیر'],
-			rightAnswer: 1
-		}, function(answer, randomAnswer, isTrue){
-			if( isTrue ){
-				start();
-			}
-			else{
-				window.location = "https://github.com/nainemom/faeze";
-			}
-		});
 	}
-	self.ended = function(map, start){
-		setTimeout( function(){
-			sound.play('ended');
-		}, 500);
-		setTimeout(function(){
-			self.go( map.levelPosition(5) );
-			self.$el.classList.add('ended');
-			self.ask(map, 	{
-				body: 'آفرین. شما پل‌ها را با موفقیت پشت سر گذاشتید. اما متأسفانه پدر دوست فائزه که انصافا اصلا از او انتظار نداشتیم، در نهایت به فائزه تجاوز کرد. اگه دوست داشتید این صفحه رو به اشتراک بذارین. آیا میخواهید ادامه دهید؟',
-				choices: ['بله', 'خیر'],
-				rightAnswer: 1
-			}, function(answer, randomAnswer, isTrue){
-				if( isTrue ){
-					start();
-				}
-				else{
-					window.location = "https://github.com/nainemom/faeze";
-				}
-			});
-		}, 750 );
+	self.ended = function(start){
+		self.$el.classList.add('ended');
 	}
-	self.reset = function(map){
+	self.reset = function(){
 		self.$el.classList.remove('ended');
 		self.$el.classList.remove('fcked');
-		self.go( map.levelPosition(0), false );
+		//self.go( map.levelPosition(0), false );
 	}
 	
 	
 	// init
 	self.$el = document.createElement('div');
 	self.$el.classList.add('faeze');
+	self.$score = document.createElement('div');
+	self.$score.classList.add('score');
 }
 
 function Sound(){
@@ -292,76 +274,158 @@ document.body.appendChild( map.$el );
 
 var sound = new Sound();
 
-var faeze = new Faeze(sound);
+var faeze = new Faeze(sound, map);
 map.$el.appendChild( faeze.$el );
+map.$el.appendChild( faeze.$score );
 
 
-
-
-var questions = [
-	{
-		body: 'الان باید از رو کدوم پل برم؟ :(',
-		choices: ['دوست پدر', 'عمو', 'پسردایی پدر'],
-		rightAnswer: 2
-	},
-	{
-		body: 'خب خدا رو شکر. تا الان که کسی بهم تجاوز نکرد. الان از رو کی رد شم؟',
-		choices: ['پسر خواهر', 'داماد عمو', 'پسرعموی مادر', 'شوهر خاله'],
-		rightAnswer: 1
-	},
-	{
-		body: 'بازم خدا رو صد هزار مرتبه شکر که هنوز تمبون تنمه. حالا از کی رد شم؟',
-		choices: ['شوهرعمه', 'پدربزرگ', 'دوست عمو', 'مغازه دار', 'پسر عمو'],
-		rightAnswer: 2
-	},
-	{
-		body: 'آخ جون ^_^ از رو اینم رد شم دیگه کار تمومه. از رو کی برم؟',
-		choices: ['دوست برادر', 'پسر برادر', 'شوهر خواهر'],
-		rightAnswer: 2
+function Game(map, faeze, sound){
+	var self = this;
+	self.currentLevel = 0;
+	self.lastRightAnswer = 0;
+	self.play = function(level){
+		switch( level ){
+			case 0:
+				faeze.reset();
+				faeze.score(0);
+				faeze.go( map.levelPosition(0), false );
+				faeze.ask({
+					body: 'الان باید از رو کدوم پل برم؟ :(',
+					choices: ['دوست پدر', 'عمو', 'پسردایی پدر']
+				}, true, function(answer, isTrue){
+					if( isTrue ){
+						self.lastRightAnswer = answer;
+						faeze.score(+100);
+						self.currentLevel++;
+						faeze.go( map.levelPosition(self.currentLevel, answer) );
+						self.play(self.currentLevel);
+					}
+					else{
+						faeze.score(-200);
+						faeze.go( map.levelPosition(self.currentLevel+1, answer) );
+						faeze.fcked();
+						self.gameOver(false);
+					}
+				});
+				break;
+			case 1:
+				faeze.reset();
+				faeze.ask({
+					body: 'خب خدا رو شکر. تا الان که کسی بهم تجاوز نکرد. الان از رو کی رد شم؟',
+					choices: ['پسر خواهر', 'داماد عمو', 'پسرعموی مادر', 'شوهر خاله']
+				}, true, function(answer, isTrue){
+					if( isTrue ){
+						self.lastRightAnswer = answer;
+						faeze.score(+200);
+						self.currentLevel++;
+						faeze.go( map.levelPosition(self.currentLevel, answer) );
+						self.play(self.currentLevel);
+					}
+					else{
+						faeze.score(-300);
+						faeze.go( map.levelPosition(self.currentLevel+1, answer) );
+						faeze.fcked();
+						self.gameOver();
+					}
+				});
+				break;
+			case 2:
+				faeze.reset();
+				faeze.ask({
+					body: 'بازم خدا رو صد هزار مرتبه شکر که هنوز تمبون تنمه. حالا از کی رد شم؟',
+					choices: ['شوهرعمه', 'پدربزرگ', 'دوست عمو', 'مغازه دار', 'پسر عمو']
+				}, true, function(answer, isTrue){
+					if( isTrue ){
+						self.lastRightAnswer = answer;
+						faeze.score(+300);
+						self.currentLevel++;
+						faeze.go( map.levelPosition(self.currentLevel, answer) );
+						self.play(self.currentLevel);
+					}
+					else{
+						faeze.score(-400);
+						faeze.go( map.levelPosition(self.currentLevel+1, answer) );
+						faeze.fcked();
+						self.gameOver();
+					}
+				});
+				break;
+			case 3:
+				faeze.reset();
+				faeze.ask({
+					body: 'آخ جون ^_^ از رو اینم رد شم دیگه کار تمومه. از رو کی برم؟',
+					choices: ['دوست برادر', 'پسر برادر', 'شوهر خواهر']
+				}, true, function(answer, isTrue){
+					if( isTrue ){
+						self.lastRightAnswer = answer;
+						faeze.score(+400);
+						self.currentLevel++;
+						faeze.go( map.levelPosition(self.currentLevel, answer) );
+						self.play(self.currentLevel);
+					}
+					else{
+						faeze.score(-500);
+						faeze.go( map.levelPosition(self.currentLevel+1, answer) );
+						faeze.fcked();
+						self.gameOver();
+					}
+				});
+				break;
+			case 4:
+				faeze.reset();
+				faeze.ask({
+					body: 'آفرین! شما با امتیاز '+faeze._score+' پل‌ها رو پشت سر گذاشتید! سوال آخر. فائزه بره خونه دوستش؟',
+					choices: ['بله','آره']
+				}, false, function(answer, isTrue){
+					faeze.score(-5000);
+					sound.play('ended');
+					self.currentLevel++;
+					faeze.ended();
+					faeze.go( map.levelPosition(5) );
+					self.play(self.currentLevel);
+				});
+				break;
+			case 5:
+				faeze.ask({
+					body: 'پدر دوست فائزه به او تجاوز کرد! انصافا خود ما سازندگان این بازی هم از او انتظار نداشتیم! می‌خواهید یک بار دیگر بازی کنید؟',
+					choices: ['بله', 'خیر']
+				}, false, function(answer){
+					if( answer == 1 ){
+						self.play(0);
+					}
+					else{
+						window.location = "https://github.com/nainemom/faeze";
+					}
+				});
+		}
 	}
-]
-
-
-
-
-function start(){
-	faeze.reset(map);
-	faeze.ask(map, questions[0], function(answer, isTrue, fromMahram){
-		faeze.go( map.levelPosition(1, answer) );
-		if( isTrue ){
-			faeze.ask(map, questions[1], function(answer, isTrue, fromMahram){
-				faeze.go( map.levelPosition(2, answer) );
-				if( isTrue ){
-					faeze.ask(map, questions[2], function(answer, isTrue, fromMahram){
-						faeze.go( map.levelPosition(3, answer) );
-						if( isTrue ){
-							faeze.ask(map, questions[3], function(answer, isTrue, fromMahram){
-								faeze.go( map.levelPosition(4, answer) );
-								if( isTrue ){
-									faeze.ended(map, start);
-								}
-								else{
-									faeze.fcked(map, start, fromMahram);
-								}
-							});
-						}
-						else{
-							faeze.fcked(map, start, fromMahram);
-						}
-					});
-			
-				}
-				else{
-					faeze.fcked(map, start, fromMahram);
-				}
-			});
-
-		}
-		else{
-			faeze.fcked(map, start, fromMahram);
-		}
-	});
+	self.gameOver = function(continue_){
+		var choices = typeof continue_ != 'undefined' && continue_ == false? ['از اول بیار!']: ['از اول بیار!','از همینجا ادامه می‌دم!'];
+		faeze.ask({
+			body: 'متأسفانه به فائزه تجاوز شد! یکی از گزینه‌های زیر را انتخاب کنید.',
+			choices: choices
+		}, false, function(answer){
+			console.log(answer);
+			if( answer == 1){
+				faeze.score(0);
+				faeze.reset();
+				self.play(0);
+			}
+			else if( answer == 2 ){
+				faeze.go( map.levelPosition(self.currentLevel, self.lastRightAnswer) );
+				faeze.reset();
+				self.play(self.currentLevel);
+			}
+		});
+	}
 }
 
-faeze.reset(map);
-message("فائزه می‌خواهد برای دیدن دوستش از روی رودخوانه‌ها رد شود، لطفا او را راهنمایی کنید تا از مسیری رد شود که نامحرمی نباشد. البته اگر گزینه درست را هم انتخاب کنید، باز هم تضمینی نیست، چون متجاوز در هر سوال بصورت اتفاقی انتخاب می‌شود! <b> برای شروع بازی کلیک کنید. </b>", start);
+
+var game = new Game(map, faeze, sound);
+
+
+faeze.go( map.levelPosition(0), false );
+
+message("فائزه می‌خواهد برای دیدن دوستش از روی رودخوانه‌ها رد شود، لطفا او را راهنمایی کنید تا از مسیری رد شود که نامحرمی نباشد. البته اگر گزینه درست را هم انتخاب کنید، باز هم تضمینی نیست، چون متجاوز در هر سوال بصورت اتفاقی انتخاب می‌شود! <b> برای شروع بازی کلیک کنید. </b>", function(){
+	game.play(0);
+});
