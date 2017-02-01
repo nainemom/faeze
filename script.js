@@ -405,11 +405,11 @@ function Game(map, faeze, sound){
 			body: 'متأسفانه به فائزه تجاوز شد! یکی از گزینه‌های زیر را انتخاب کنید.',
 			choices: choices
 		}, false, function(answer){
-			console.log(answer);
 			if( answer == 1){
+				self.currentLevel = 0;
 				faeze.score(0);
 				faeze.reset();
-				self.play(0);
+				self.play(self.currentLevel);
 			}
 			else if( answer == 2 ){
 				faeze.go( map.levelPosition(self.currentLevel, self.lastRightAnswer) );
