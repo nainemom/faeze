@@ -144,8 +144,10 @@ function Map(){
 
 function Faeze(sound){
 	var self = this;
-	self.go = function(position){
-		sound.play('jump');
+	self.go = function(position, playSound){
+		if( typeof playSound != 'undefined' && playSound == true ) {
+			sound.play('jump');
+		}
 		self.$el.style.left = (position.x - 27) +'px';
 		self.$el.style.top = (position.y - 70)+'px';
 	}
@@ -226,7 +228,7 @@ function Faeze(sound){
 	self.reset = function(map){
 		self.$el.classList.remove('ended');
 		self.$el.classList.remove('fcked');
-		self.go( map.levelPosition(0) );
+		self.go( map.levelPosition(0), false );
 	}
 	
 	
