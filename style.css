@@ -35,8 +35,11 @@ html, body{
 	animation-duration: .3s;
 }
 .faeze.fcked{
+	background-image: url("faeze_fcked.png");
     transform: rotateZ(280deg) translateX(-50%);
-    animation: none;
+	animation-name: faeze_fcked;
+	animation-iteration-count: 1;
+	animation-duration: .3s;
 }
 
 .faeze.ended{
@@ -69,4 +72,8 @@ html, body{
 @keyframes faeze_dance {
     0%   {transform: translateY(-1%)}
     50%  {transform: translateY(-2%)}
+}
+@keyframes faeze_fcked {
+    0%   {transform: rotateZ(-90deg) translateX(50%);}
+    99%  {transform: rotateZ(280deg) translateX(-50%);}
 }
