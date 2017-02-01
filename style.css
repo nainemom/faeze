@@ -8,19 +8,45 @@ html, body{
 	font-size: .9em;
 }
 .desc{
+	position: fixed;
+	background: #2D5781;
+	padding: 25px;
 	width: 450px;
 	color: #FFF;
-	margin: 10px auto;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	box-shadow: 0 0 55px #000;
+	border-radius: 10px;
+	cursor: pointer;
+	font-size: 15px;
+	z-index: 9999;
 }
+.overlay{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.5);
+	z-index: 9995;
+}
+.hide{
+	display: none;
+}
+
 .map{
-	margin: 50px auto;
-	position: relative;
+	position: fixed;
 	background-image: url("map.png");
 	width: 450px;
 	height: 575px;
 	box-shadow: 0 0 25px rgba(0,0,0,0.75);
 	border-radius: 8px;
 	overflow: hidden;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 9990;
 }
 
 

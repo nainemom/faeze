@@ -270,6 +270,23 @@ function Sound(){
 	}
 }
 
+function message(text, callback){
+	var $overlay = document.createElement('div');
+	var $desc = document.createElement('div');
+
+	$overlay.classList.add('overlay');
+	$desc.classList.add('desc');
+	$desc.innerHTML = text;
+	document.body.appendChild($overlay);
+	document.body.appendChild($desc);
+	$overlay.onclick = $desc.onclick = function(){
+		$overlay.remove();
+		$desc.remove();
+		callback();
+	}
+	
+}
+
 var map = new Map();
 document.body.appendChild( map.$el );
 
@@ -345,4 +362,6 @@ function start(){
 		}
 	});
 }
-start();
+
+faeze.reset(map);
+message("فائزه می‌خواهد برای دیدن دوستش از روی رودخوانه‌ها رد شود، لطفا او را راهنمایی کنید تا از مسیری رد شود که نامحرمی نباشد. البته اگر گزینه درست را هم انتخاب کنید، باز هم تضمینی نیست، چون متجاوز در هر سوال بصورت اتفاقی انتخاب می‌شود! <b> برای شروع بازی کلیک کنید. </b>", start);
