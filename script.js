@@ -179,8 +179,7 @@ function Faeze(sound, map){
 				var answer = parseInt( this.getAttribute('choice') );
 				$el.remove();
 				
-				var rightAnswer = parseInt( Math.random() * question.choices.length ) + 1;
-				
+				rightAnswer = question.rightAnswer;
 				callback(answer, answer == rightAnswer);
 				if( soundPlay == true && answer == rightAnswer ){
 					setTimeout( function(){
@@ -283,15 +282,20 @@ function Game(map, faeze, sound){
 	var self = this;
 	self.currentLevel = 0;
 	self.lastRightAnswer = 0;
+	self.answers = {};
 	self.play = function(level){
 		switch( level ){
 			case 0:
+				if( typeof self.answers[level] == 'undefined' ){
+					self.answers[level] = parseInt( Math.random() * 3 ) + 1;
+				}
 				faeze.reset();
 				faeze.score(0);
 				faeze.go( map.levelPosition(0), false );
 				faeze.ask({
 					body: 'الان باید از رو کدوم پل برم؟ :(',
-					choices: ['دوست پدر', 'عمو', 'پسردایی پدر']
+					choices: ['دوست پدر', 'عمو', 'پسردایی پدر'],
+					rightAnswer: self.answers[level]
 				}, true, function(answer, isTrue){
 					if( isTrue ){
 						self.lastRightAnswer = answer;
@@ -309,10 +313,14 @@ function Game(map, faeze, sound){
 				});
 				break;
 			case 1:
+				if( typeof self.answers[level] == 'undefined' ){
+					self.answers[level] = parseInt( Math.random() * 4 ) + 1;
+				}
 				faeze.reset();
 				faeze.ask({
 					body: 'خب خدا رو شکر. تا الان که کسی بهم تجاوز نکرد. الان از رو کی رد شم؟',
-					choices: ['پسر خواهر', 'داماد عمو', 'پسرعموی مادر', 'شوهر خاله']
+					choices: ['پسر خواهر', 'داماد عمو', 'پسرعموی مادر', 'شوهر خاله'],
+					rightAnswer: self.answers[level]
 				}, true, function(answer, isTrue){
 					if( isTrue ){
 						self.lastRightAnswer = answer;
@@ -330,10 +338,14 @@ function Game(map, faeze, sound){
 				});
 				break;
 			case 2:
+				if( typeof self.answers[level] == 'undefined' ){
+					self.answers[level] = parseInt( Math.random() * 5 ) + 1;
+				}
 				faeze.reset();
 				faeze.ask({
 					body: 'بازم خدا رو صد هزار مرتبه شکر که هنوز تمبون تنمه. حالا از کی رد شم؟',
-					choices: ['شوهرعمه', 'پدربزرگ', 'دوست عمو', 'مغازه دار', 'پسر عمو']
+					choices: ['شوهرعمه', 'پدربزرگ', 'دوست عمو', 'مغازه دار', 'پسر عمو'],
+					rightAnswer: self.answers[level]
 				}, true, function(answer, isTrue){
 					if( isTrue ){
 						self.lastRightAnswer = answer;
@@ -351,10 +363,14 @@ function Game(map, faeze, sound){
 				});
 				break;
 			case 3:
+				if( typeof self.answers[level] == 'undefined' ){
+					self.answers[level] = parseInt( Math.random() * 3 ) + 1;
+				}
 				faeze.reset();
 				faeze.ask({
 					body: 'آخ جون ^_^ از رو اینم رد شم دیگه کار تمومه. از رو کی برم؟',
-					choices: ['دوست برادر', 'پسر برادر', 'شوهر خواهر']
+					choices: ['دوست برادر', 'پسر برادر', 'شوهر خواهر'],
+					rightAnswer: self.answers[level]
 				}, true, function(answer, isTrue){
 					if( isTrue ){
 						self.lastRightAnswer = answer;
@@ -372,10 +388,14 @@ function Game(map, faeze, sound){
 				});
 				break;
 			case 4:
+				if( typeof self.answers[level] == 'undefined' ){
+					self.answers[level] = parseInt( Math.random() * 2 ) + 1;
+				}
 				faeze.reset();
 				faeze.ask({
 					body: 'آفرین! شما با امتیاز '+faeze._score+' پل‌ها رو پشت سر گذاشتید! سوال آخر. فائزه بره خونه دوستش؟',
-					choices: ['بله','آره']
+					choices: ['بله','آره'],
+					rightAnswer: self.answers[level]
 				}, false, function(answer, isTrue){
 					faeze.score(-5000);
 					sound.play('ended');
@@ -386,9 +406,13 @@ function Game(map, faeze, sound){
 				});
 				break;
 			case 5:
+				if( typeof self.answers[level] == 'undefined' ){
+					self.answers[level] = parseInt( Math.random() * 2 ) + 1;
+				}
 				faeze.ask({
 					body: 'پدر دوست فائزه به او تجاوز کرد! انصافا خود ما سازندگان این بازی هم از او انتظار نداشتیم! می‌خواهید یک بار دیگر بازی کنید؟',
-					choices: ['بله', 'خیر']
+					choices: ['بله', 'خیر'],
+					rightAnswer: self.answers[level]
 				}, false, function(answer){
 					if( answer == 1 ){
 						self.play(0);
@@ -405,9 +429,11 @@ function Game(map, faeze, sound){
 		var choices = typeof continue_ != 'undefined' && continue_ == false? ['از اول بیار!']: ['از اول بیار!','از همینجا ادامه می‌دم!'];
 		faeze.ask({
 			body: 'متأسفانه به فائزه تجاوز شد! یکی از گزینه‌های زیر را انتخاب کنید.',
-			choices: choices
+			choices: choices,
+			rightAnswer: 0
 		}, false, function(answer){
 			if( answer == 1){
+				self.answers = [];
 				self.currentLevel = 0;
 				faeze.score(0);
 				faeze.reset();
