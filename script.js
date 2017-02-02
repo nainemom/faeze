@@ -318,7 +318,7 @@ function Game(map, faeze, sound){
 				}
 				faeze.reset();
 				faeze.ask({
-					body: 'خب خدا رو شکر. تا الان که کسی بهم تجاوز نکرد. الان از رو کی رد شم؟',
+					body: 'خب خدا رو شکر. تا الان که کسی منفجرم نکرده. الان از رو کی رد شم؟',
 					choices: ['پسر خواهر', 'داماد عمو', 'پسرعموی مادر', 'شوهر خاله'],
 					rightAnswer: self.answers[level]
 				}, true, function(answer, isTrue){
@@ -343,7 +343,7 @@ function Game(map, faeze, sound){
 				}
 				faeze.reset();
 				faeze.ask({
-					body: 'بازم خدا رو صد هزار مرتبه شکر که هنوز تمبون تنمه. حالا از کی رد شم؟',
+					body: 'بازم خدا رو صد هزار مرتبه شکر که هنوز نترکیدم. حالا از کی رد شم؟',
 					choices: ['شوهرعمه', 'پدربزرگ', 'دوست عمو', 'مغازه دار', 'پسر عمو'],
 					rightAnswer: self.answers[level]
 				}, true, function(answer, isTrue){
@@ -410,7 +410,7 @@ function Game(map, faeze, sound){
 					self.answers[level] = parseInt( Math.random() * 2 ) + 1;
 				}
 				faeze.ask({
-					body: 'پدر دوست فائزه به او تجاوز کرد! انصافا خود ما سازندگان این بازی هم از او انتظار نداشتیم! می‌خواهید یک بار دیگر بازی کنید؟',
+					body: 'متأسفانه فائزه توسط پدر دوستش بوسیله تفنگ شکاری شهید شد. انصافا خود ما هم انتظار نداشتیم. این صفحه را به اشتراک بگذارید. آیا می‌خواهید ادامه دهید؟',
 					choices: ['بله', 'خیر'],
 					rightAnswer: self.answers[level]
 				}, false, function(answer){
@@ -428,7 +428,7 @@ function Game(map, faeze, sound){
 	self.gameOver = function(continue_){
 		var choices = typeof continue_ != 'undefined' && continue_ == false? ['از اول بیار!']: ['از اول بیار!','از همینجا ادامه می‌دم!'];
 		faeze.ask({
-			body: 'متأسفانه به فائزه تجاوز شد! یکی از گزینه‌های زیر را انتخاب کنید.',
+			body: 'متأسفانه فائزه منفجر شد! یکی از گزینه‌های زیر را انتخاب کنید.',
 			choices: choices,
 			rightAnswer: 0
 		}, false, function(answer){
@@ -454,6 +454,6 @@ var game = new Game(map, faeze, sound);
 
 faeze.go( map.levelPosition(0), false );
 
-message("فائزه می‌خواهد برای دیدن دوستش از روی رودخوانه‌ها رد شود، لطفا او را راهنمایی کنید تا از مسیری رد شود که نامحرمی نباشد. البته اگر گزینه درست را هم انتخاب کنید، باز هم تضمینی نیست، چون متجاوز در هر سوال بصورت اتفاقی انتخاب می‌شود! <b> برای شروع بازی کلیک کنید. </b>", function(){
+message("فائزه می‌خواهد برای دیدن دوستش از روی رودخوانه‌ها رد شود، اما بعضی از پل‌ها مین‌گذاری شده‌اند. پل امن در هر سوال بصورت اتفاقی انتخاب می‌شود. <b>برای شروع بازی کلیک کنید.</b>", function(){
 	game.play(0);
 });
