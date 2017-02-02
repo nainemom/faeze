@@ -226,8 +226,10 @@ function Sound(){
 				soundEffect(523.25, 0.05, 0.2, 'sine', 3, 0.8, 0, 600, true, 100, 0);
 				break;
 			case 'fcked':
-			  soundEffect(150, 0, 0.3, "square", .05, 0, 0);  
-			  soundEffect(50, 0, 0.7, "square", .06, 0, 0.2);
+				soundEffect(80, 0, 0.5, "square", .05, 0, 0);
+				soundEffect(50, 0, 1, "square", .05, 0, 0);
+				soundEffect(30, 0, 1.5, "square", .05, 0, 0);
+				soundEffect(330, 0, 1.5, "sine", .05, 0, 0);
 				break;
 			case 'ended':
 				soundEffect(180, 0, 0.2, "square", 0.07, 0, 0);

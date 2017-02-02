@@ -74,10 +74,11 @@ html, body{
 }
 .faeze.fcked{
 	background-image: url("faeze_fcked.png");
-    transform: rotateZ(280deg) translateX(-50%);
+	transform: rotateZ(280deg) translateX(-50%) scale(0.5,0,5);
+	opacity: 0;
 	animation-name: faeze_fcked;
 	animation-iteration-count: 1;
-	animation-duration: .3s;
+	animation-duration: 1s;
 }
 
 .faeze.ended{
@@ -112,6 +113,7 @@ html, body{
     50%  {transform: translateY(-2%)}
 }
 @keyframes faeze_fcked {
-    0%   {transform: rotateZ(-90deg) translateX(50%);}
-    99%  {transform: rotateZ(280deg) translateX(-50%);}
+    0%   {transform: rotateZ(-90deg) translateX(50%); opacity: 1;}
+    60%  {transform: rotateZ(280deg) translateX(-50%); opacity: 1;}
+    100%  {transform: rotateZ(280deg) translateX(-50%) scale(0.5,0.5); opacity: 0;}
 }
