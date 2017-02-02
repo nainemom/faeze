@@ -151,10 +151,10 @@ function Faeze(sound, map){
 		self.$el.style.left = (position.x - 27) +'px';
 		self.$el.style.top = (position.y - 70)+'px';
 	}
-	self._score = 2000;
+	self._score = 4000;
 	self.score = function(val){
 		if( val === 0 ){
-			self._score = 2000;
+			self._score = 4000;
 		}
 		else{
 			self._score+=val;
@@ -295,13 +295,13 @@ function Game(map, faeze, sound){
 				}, true, function(answer, isTrue){
 					if( isTrue ){
 						self.lastRightAnswer = answer;
-						faeze.score(+100);
+						faeze.score(+150);
 						self.currentLevel++;
 						faeze.go( map.levelPosition(self.currentLevel, answer) );
 						self.play(self.currentLevel);
 					}
 					else{
-						faeze.score(-200);
+						faeze.score(-100);
 						faeze.go( map.levelPosition(self.currentLevel+1, answer) );
 						faeze.fcked();
 						self.gameOver(false);
@@ -322,7 +322,7 @@ function Game(map, faeze, sound){
 						self.play(self.currentLevel);
 					}
 					else{
-						faeze.score(-300);
+						faeze.score(-100);
 						faeze.go( map.levelPosition(self.currentLevel+1, answer) );
 						faeze.fcked();
 						self.gameOver();
@@ -343,7 +343,7 @@ function Game(map, faeze, sound){
 						self.play(self.currentLevel);
 					}
 					else{
-						faeze.score(-400);
+						faeze.score(-100);
 						faeze.go( map.levelPosition(self.currentLevel+1, answer) );
 						faeze.fcked();
 						self.gameOver();
@@ -364,7 +364,7 @@ function Game(map, faeze, sound){
 						self.play(self.currentLevel);
 					}
 					else{
-						faeze.score(-500);
+						faeze.score(-100);
 						faeze.go( map.levelPosition(self.currentLevel+1, answer) );
 						faeze.fcked();
 						self.gameOver();
@@ -392,6 +392,8 @@ function Game(map, faeze, sound){
 				}, false, function(answer){
 					if( answer == 1 ){
 						self.play(0);
+						faeze.reset();
+						self.currentLevel = 0;
 					}
 					else{
 						window.location = "https://github.com/nainemom/faeze";
